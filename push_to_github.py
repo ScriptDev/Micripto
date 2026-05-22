@@ -32,6 +32,20 @@ def main():
         print("    Por favor, instale o Git: https://git-scm.com/downloads")
         sys.exit(1)
         
+    # Copiar o favicon gerado do diretório da IA para o projeto do usuário
+    src_favicon = r"C:\Users\Usuario\.gemini\antigravity\brain\5477bb17-6572-4c44-90f7-4ccb8fafcace\favicon_1779410231613.png"
+    dest_favicon = os.path.join("uniateneulogo", "favicon.png")
+    
+    if os.path.exists(src_favicon):
+        print(f"\n[*] Copiando favicon gerado de {src_favicon} para {dest_favicon}...")
+        try:
+            import shutil
+            os.makedirs(os.path.dirname(dest_favicon), exist_ok=True)
+            shutil.copy2(src_favicon, dest_favicon)
+            print("[+] Favicon copiado com sucesso!")
+        except Exception as e:
+            print(f"[-] Erro ao copiar o favicon: {str(e)}")
+            
     repo_url = "https://github.com/ScriptDev/Micripto.git"
     
     # 2. Inicializar repositório local se necessário
