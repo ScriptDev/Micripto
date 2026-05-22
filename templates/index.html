@@ -983,6 +983,13 @@
                 padding: 0.4rem;
                 gap: 0.5rem;
                 -webkit-overflow-scrolling: touch;
+                -ms-overflow-style: none;  /* Oculta scrollbar no IE e Edge */
+                scrollbar-width: none;  /* Oculta scrollbar no Firefox */
+            }
+
+            /* Ocultar barra de rolagem dos navegadores baseados em Webkit (Chrome, Safari, Opera) mantendo o deslize funcional */
+            .tabs-container::-webkit-scrollbar {
+                display: none;
             }
 
             .tab-btn {
@@ -1018,6 +1025,36 @@
                 grid-template-columns: 1fr !important;
                 gap: 1rem;
             }
+
+            /* Colapso Inteligente de Grids Inline no Mobile (p e q, chaves rsa, usuário/senha) */
+            div[style*="grid-template-columns: 1fr 1fr"],
+            div[style*="grid-template-columns: 1fr 1fr;"] {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .terminal-header {
+                flex-direction: column;
+                gap: 0.5rem;
+                align-items: flex-start;
+                padding: 0.75rem 1rem;
+            }
+
+            .terminal-dots {
+                display: none; /* Oculta as bolinhas decorativas para salvar espaço vertical útil */
+            }
+
+            .terminal-title {
+                font-size: 0.75rem;
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .terminal-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1030,14 +1067,14 @@
                 width: 100%;
             }
 
-            /* Forçar alinhamento de grids inline de duas colunas para uma única coluna no mobile */
-            div[style*="grid-template-columns: 1fr 1fr"],
-            div[style*="grid-template-columns: 1fr 1fr;"] {
-                grid-template-columns: 1fr !important;
-            }
-
             #rsa-p, #rsa-q {
                 width: 100%;
+            }
+
+            /* Detalhe de inputs de senha em grids mais estreitos */
+            input, textarea, select {
+                padding: 0.6rem 0.8rem;
+                font-size: 0.9rem;
             }
 
             footer {
