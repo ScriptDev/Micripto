@@ -253,6 +253,23 @@
             opacity: 1;
         }
 
+        /* Ajuste premium para tooltips alinhados à esquerda (para evitar cortes nas bordas direitas) */
+        .tooltip-wrapper.tooltip-left::after {
+            left: auto;
+            right: 0;
+            transform: translateX(0) scale(0.9);
+        }
+
+        .tooltip-wrapper.tooltip-left::before {
+            left: auto;
+            right: 12px;
+            transform: translateX(0);
+        }
+
+        .tooltip-wrapper.tooltip-left:hover::after {
+            transform: translateX(0) scale(1);
+        }
+
         /* Navigation Tabs */
         .tabs-container {
             display: flex;
@@ -354,7 +371,7 @@
             flex-direction: column;
             gap: 1.5rem;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .card::before {
@@ -1024,7 +1041,7 @@
                 <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <h3 style="font-size: 1rem; font-weight: 700; color: var(--accent);">Etapa 1: Cadastrar Nova Conta</h3>
-                        <div class="tooltip-wrapper" data-tooltip="Hashing é um algoritmo matemático que mapeia dados de tamanho variável para um comprimento fixo de forma irreversível.">
+                        <div class="tooltip-wrapper tooltip-left" data-tooltip="Hashing é um algoritmo matemático que mapeia dados de tamanho variável para um comprimento fixo de forma irreversível.">
                             <span class="tooltip-icon"><i data-lucide="help-circle" style="width: 16px;"></i> O que é Hash?</span>
                         </div>
                     </div>
@@ -1036,7 +1053,7 @@
                         <div class="form-group">
                             <div style="display: flex; align-items: center; justify-content: space-between;">
                                 <label>Senha Secreta</label>
-                                <div class="tooltip-wrapper" data-tooltip="A senha digitada será concatenada ao Sal (Salt) antes do processamento, evitando que um invasor descubra senhas iguais de usuários diferentes.">
+                                <div class="tooltip-wrapper tooltip-left" data-tooltip="A senha digitada será concatenada ao Sal (Salt) antes do processamento, evitando que um invasor descubra senhas iguais de usuários diferentes.">
                                     <span class="tooltip-icon" style="color: var(--secondary);"><i data-lucide="help-circle" style="width: 14px;"></i> Segurança</span>
                                 </div>
                             </div>
@@ -1052,7 +1069,7 @@
                 <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <h3 style="font-size: 1rem; font-weight: 700; color: var(--secondary);">Etapa 2: Acessar Conta (Login)</h3>
-                        <div class="tooltip-wrapper" data-tooltip="No login, o sistema busca o Sal do usuário no banco, junta com a senha digitada e recalcula o hash. Se for idêntico ao salvo, concede acesso.">
+                        <div class="tooltip-wrapper tooltip-left" data-tooltip="No login, o sistema busca o Sal do usuário no banco, junta com a senha digitada e recalcula o hash. Se for idêntico ao salvo, concede acesso.">
                             <span class="tooltip-icon"><i data-lucide="help-circle" style="width: 16px;"></i> Como é validado?</span>
                         </div>
                     </div>
@@ -1145,7 +1162,7 @@
                 <div class="form-group">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <label>Chave Simétrica Mestra (Compartilhada)</label>
-                        <div class="tooltip-wrapper" data-tooltip="Chave única secreta que deve ser compartilhada entre as partes. É usada tanto no início da cifragem quanto no final da decifragem.">
+                        <div class="tooltip-wrapper tooltip-left" data-tooltip="Chave única secreta que deve ser compartilhada entre as partes. É usada tanto no início da cifragem quanto no final da decifragem.">
                             <span class="tooltip-icon"><i data-lucide="help-circle" style="width: 16px;"></i> Papel da Chave</span>
                         </div>
                     </div>
@@ -1157,7 +1174,7 @@
                     <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <h3 style="font-size: 1rem; font-weight: 700; color: var(--accent);">Cifrar Mensagem</h3>
-                            <div class="tooltip-wrapper" data-tooltip="Rede de Feistel: Divide o bloco de dados de 2 bytes ao meio (Esquerda/Direita). A cada rodada, a metade direita é misturada com uma chave e operada com XOR contra a metade esquerda.">
+                            <div class="tooltip-wrapper tooltip-left" data-tooltip="Rede de Feistel: Divide o bloco de dados de 2 bytes ao meio (Esquerda/Direita). A cada rodada, a metade direita é misturada com uma chave e operada com XOR contra a metade esquerda.">
                                 <span class="tooltip-icon" style="color: var(--accent);"><i data-lucide="help-circle" style="width: 16px;"></i> Rede de Feistel?</span>
                             </div>
                         </div>
@@ -1174,7 +1191,7 @@
                     <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <h3 style="font-size: 1rem; font-weight: 700; color: var(--success);">Decifrar Mensagem</h3>
-                            <div class="tooltip-wrapper" data-tooltip="Como a rede Feistel é simétrica, decifrar exige apenas reexecutar a cifragem aplicando as chaves de rodada de forma invertida (K3 -> K2 -> K1 -> K0).">
+                            <div class="tooltip-wrapper tooltip-left" data-tooltip="Como a rede Feistel é simétrica, decifrar exige apenas reexecutar a cifragem aplicando as chaves de rodada de forma invertida (K3 -> K2 -> K1 -> K0).">
                                 <span class="tooltip-icon" style="color: var(--success);"><i data-lucide="help-circle" style="width: 16px;"></i> Por que Reversível?</span>
                             </div>
                         </div>
@@ -1231,7 +1248,7 @@
                 <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; background: rgba(0,0,0,0.1);">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--accent);">Etapa 1: Gerar Par de Chaves RSA</h3>
-                        <div class="tooltip-wrapper" data-tooltip="Primos grandes formam o módulo n. No RSA real, primos de 2048 bits impedem a fatoração computacional por computadores convencionais.">
+                        <div class="tooltip-wrapper tooltip-left" data-tooltip="Primos grandes formam o módulo n. No RSA real, primos de 2048 bits impedem a fatoração computacional por computadores convencionais.">
                             <span class="tooltip-icon"><i data-lucide="help-circle" style="width: 14px;"></i> Por que Primos?</span>
                         </div>
                     </div>
@@ -1270,7 +1287,7 @@
                     <div style="background: rgba(139, 92, 246, 0.05); border: 1.5px solid rgba(139, 92, 246, 0.2); border-radius: 10px; padding: 0.75rem; position: relative;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <h4 style="font-size: 0.8rem; font-weight: 700; color: #a78bfa; text-transform: uppercase;">Chave Privada (d, n)</h4>
-                            <div class="tooltip-wrapper" data-tooltip="A chave privada (expoente privado 'd' e módulo 'n') deve ser protegida sob sigilo absoluto. Só ela desfaz os cálculos gerados pela pública.">
+                            <div class="tooltip-wrapper tooltip-left" data-tooltip="A chave privada (expoente privado 'd' e módulo 'n') deve ser protegida sob sigilo absoluto. Só ela desfaz os cálculos gerados pela pública.">
                                 <span class="tooltip-icon" style="color: #a78bfa;"><i data-lucide="help-circle" style="width: 12px;"></i></span>
                             </div>
                         </div>
@@ -1284,7 +1301,7 @@
                     <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--accent);">Cifragem com Chave Pública</h3>
-                            <div class="tooltip-wrapper" data-tooltip="Fórmula: C = M^e mod n. Cada letra é convertida para ASCII e elevada ao expoente público 'e', aplicando o resto da divisão pelo módulo 'n'.">
+                            <div class="tooltip-wrapper tooltip-left" data-tooltip="Fórmula: C = M^e mod n. Cada letra é convertida para ASCII e elevada ao expoente público 'e', aplicando o resto da divisão pelo módulo 'n'.">
                                 <span class="tooltip-icon" style="color: var(--accent);"><i data-lucide="help-circle" style="width: 14px;"></i> Equação</span>
                             </div>
                         </div>
@@ -1301,7 +1318,7 @@
                     <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--success);">Decifragem com Chave Privada</h3>
-                            <div class="tooltip-wrapper" data-tooltip="Fórmula: M = C^d mod n. O texto cifrado 'C' é elevado ao expoente secreto 'd' sob o módulo 'n'. A matemática de Euler garante a restauração original.">
+                            <div class="tooltip-wrapper tooltip-left" data-tooltip="Fórmula: M = C^d mod n. O texto cifrado 'C' é elevado ao expoente secreto 'd' sob o módulo 'n'. A matemática de Euler garante a restauração original.">
                                 <span class="tooltip-icon" style="color: var(--success);"><i data-lucide="help-circle" style="width: 14px;"></i> Equação</span>
                             </div>
                         </div>
