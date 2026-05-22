@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiniCript - Criptografia Aplicada ao Desenvolvimento</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,300&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons (Lucide Icons via CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --bg-main: #051014;
+            --bg-card: #091f24;
+            --bg-input: #0f2e36;
+            --text-primary: #e2e8f0;
+            --text-secondary: #94a3b8;
+            --primary: #14b8a6;
+            --primary-glow: rgba(20, 184, 166, 0.4);
+            --secondary: #0d9488;
+            --secondary-glow: rgba(13, 148, 136, 0.4);
+            --accent: #f59e0b;
+            --accent-glow: rgba(245, 158, 11, 0.4);
+            --success: #2dd4bf;
+            --success-glow: rgba(45, 212, 191, 0.3);
+            --danger: #f43f5e;
+            --terminal-bg: #02070a;
+            --terminal-border: #0c262d;
+            --terminal-text: #2dd4bf;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-input);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, #051014 0%, #091f24 100%);
+            border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo-icon {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            box-shadow: 0 0 20px var(--primary-glow);
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #2dd4bf, #fcd34d, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .header-badge {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #a7f3d0;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+         .team-banner {
+            background: linear-gradient(135deg, rgba(9, 31, 36, 0.9) 0%, rgba(5, 16, 20, 0.9) 100%);
+            border: 1.5px solid rgba(245, 158, 11, 0.25);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin: 1.5rem auto 0;
+            width: 90%;
+            max-width: 1400px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        @media (min-width: 768px) {
+            .team-banner {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .team-details h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: #f59e0b;
+            margin-bottom: 0.4rem;
+        }
+        .team-details p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .team-members-list {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.25rem;
+        }
+
+        .team-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            color: var(--accent);
+        }
+
+        .team-names {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Tooltip Premium System */
+        .tooltip-wrapper {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .tooltip-icon {
+            color: var(--accent);
+            cursor: help;
+            display: inline-flex;
+            align-items: center;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+
+        .tooltip-icon:hover {
+            opacity: 1;
+        }
+
+        .tooltip-wrapper::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%) scale(0.9);
+            background: #0f172a;
+            border: 1px solid var(--accent);
+            color: #e2e8f0;
+            padding: 0.6rem 0.9rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            font-weight: 500;
+            width: 260px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .tooltip-wrapper::before {
+            content: '';
+            position: absolute;
+            bottom: 115%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 6px;
+            border-style: solid;
+            border-color: var(--accent) transparent transparent transparent;
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tooltip-wrapper:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        .tooltip-wrapper:hover::before {
+            opacity: 1;
+        }
+
+        /* Navigation Tabs */
+        .tabs-container {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1.5rem auto 0;
+            background: rgba(9, 31, 36, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 0.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(245, 158, 11, 0.15);
+            max-width: 90%;
+            width: 850px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .tab-btn.active {
+            color: white;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            box-shadow: 0 4px 15px var(--primary-glow);
+        }
+
+        /* Main Workspace Content */
+        main {
+            flex: 1;
+            padding: 2rem;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .tab-content.active {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        @media (min-width: 1024px) {
+            .tab-content.active {
+                grid-template-columns: 1.1fr 0.9fr;
+            }
+            .rsa-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .rsa-layout {
+                grid-template-columns: 1.2fr 0.8fr !important;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Card Elements */
+        .card {
+            background-color: rgba(9, 31, 36, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            border: 1px solid rgba(245, 158, 11, 0.15);
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 1rem;
+        }
+
+        .card-header i {
+            color: var(--accent);
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        /* Form Elements */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, textarea, select {
+            background-color: var(--bg-input);
+            border: 1.5px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.2);
+            background-color: rgba(27, 38, 59, 0.8);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(20, 184, 166, 0.25);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(20, 184, 166, 0.45);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #0d9488 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(45, 212, 191, 0.25);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45, 212, 191, 0.45);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            color: var(--text-primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: white;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* DB Visualizer Card */
+        .db-visualizer {
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            background: rgba(11, 15, 25, 0.5);
+        }
+
+        .db-header {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .db-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .db-table-wrapper {
+            max-height: 160px;
+            overflow-y: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        th, td {
+            padding: 0.6rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            color: var(--text-primary);
+        }
+
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+
+        .text-salt {
+            color: #fb7185;
+        }
+
+        .text-hash {
+            color: #38bdf8;
+            word-break: break-all;
+        }
+
+        /* Live Terminal Logs */
+        .terminal-container {
+            background-color: rgba(2, 7, 10, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--terminal-border);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            min-height: 400px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        .terminal-header {
+            background-color: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid var(--terminal-border);
+            padding: 0.75rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 16px 16px 0 0;
+        }
+
+        .terminal-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .terminal-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .term-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            cursor: pointer;
+        }
+
+        .term-btn:hover {
+            color: white;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .terminal-dots {
+            display: flex;
+            gap: 0.4rem;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot-red { background-color: #ef4444; }
+        .dot-yellow { background-color: #f59e0b; }
+        .dot-green { background-color: #10b981; }
+
+        .terminal-body {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--terminal-text);
+            max-height: 500px;
+        }
+
+        .terminal-line {
+            margin-bottom: 0.5rem;
+            white-space: pre-wrap;
+            opacity: 0;
+            transform: translateY(5px);
+            animation: printLine 0.3s ease forwards;
+        }
+
+        @keyframes printLine {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .terminal-welcome {
+            color: #60a5fa;
+            border-bottom: 1px dashed rgba(96, 165, 250, 0.2);
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Prime Suggestion Grid */
+        .prime-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.25rem;
+        }
+
+        .prime-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .prime-pill:hover {
+            background: var(--accent);
+            color: black;
+            border-color: var(--accent);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.4);
+        }
+
+        /* Success Overlay Screen simulation */
+        .auth-status-panel {
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 600;
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .auth-status-panel.success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #a7f3d0;
+            display: flex;
+        }
+
+        .auth-status-panel.error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+            display: flex;
+        }
+
+        /* Bottom Educational Grid */
+        .edu-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .edu-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .edu-card {
+            background: rgba(21, 29, 48, 0.4);
+            border: 1.5px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .edu-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #fcd34d;
+        }
+
+        .edu-card p {
+            font-size: 0.85rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+        }
+
+        .gold-list {
+            margin-top: 0.5rem;
+            padding-left: 1.25rem;
+            font-size: 0.8rem;
+            color: var(--accent);
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #030a0d;
+            border-top: 1px solid rgba(245, 158, 11, 0.15);
+            padding: 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .signature {
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+        }
+
+        /* Estilos do Plano de Fundo Hacker Animado e Otimizado */
+        #hacker-bg-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            background-color: var(--bg-main);
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .hacker-bg-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .hex-grid-svg {
+            opacity: 0.035;
+        }
+
+        .circuit-lines-svg {
+            opacity: 0.05;
+        }
+
+        #matrix-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            opacity: 0.22;
+        }
+
+        /* Glow Orbs */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(80px);
+            opacity: 0.45;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            top: -10%;
+            left: -10%;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.08) 0%, transparent 70%);
+            animation: pulse-orb 7s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -5%;
+            right: -5%;
+            background: radial-gradient(circle, rgba(13, 148, 136, 0.08) 0%, transparent 70%);
+            animation: pulse-orb 9s ease-in-out infinite reverse;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.05) 0%, transparent 70%);
+            animation: pulse-orb 11s ease-in-out infinite;
+        }
+
+        @keyframes pulse-orb {
+            0%, 100% { transform: scale(1); opacity: 0.45; }
+            50% { transform: scale(1.15); opacity: 0.3; }
+        }
+
+        .scanline {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(20, 184, 166, 0.01) 2px, rgba(20, 184, 166, 0.01) 4px);
+        }
+
+        /* Floating Tags */
+        .floating-tag {
+            position: absolute;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.05em;
+            pointer-events: none;
+            user-select: none;
+            white-space: nowrap;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        /* Crypto Hashes */
+        #crypto-hash-display {
+            position: absolute;
+            bottom: 2rem;
+            left: 2rem;
+            pointer-events: none;
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .crypto-hash-line {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            color: rgba(20, 184, 166, 0.25);
+            letter-spacing: 0.08em;
+            text-shadow: 0 0 4px rgba(20, 184, 166, 0.15);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Plano de Fundo Hacker Animado e Otimizado -->
+    <div id="hacker-bg-container">
+        <!-- SVG Hex Grid -->
+        <svg class="hacker-bg-svg hex-grid-svg" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="hexPattern" x="0" y="0" width="60" height="52" patternUnits="userSpaceOnUse">
+                    <polygon points="30,2 58,17 58,47 30,62 2,47 2,17" fill="none" stroke="#14b8a6" stroke-width="0.8" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#hexPattern)" />
+        </svg>
+
+        <!-- SVG Circuit Lines -->
+        <svg class="hacker-bg-svg circuit-lines-svg" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="30%" x2="15%" y2="30%" stroke="#14b8a6" stroke-width="1" />
+            <line x1="15%" y1="30%" x2="15%" y2="60%" stroke="#14b8a6" stroke-width="1" />
+            <line x1="15%" y1="60%" x2="35%" y2="60%" stroke="#14b8a6" stroke-width="1" />
+            <circle cx="15%" cy="30%" r="3" fill="#f59e0b" />
+            <circle cx="35%" cy="60%" r="3" fill="#14b8a6" />
+
+            <line x1="100%" y1="20%" x2="85%" y2="20%" stroke="#14b8a6" stroke-width="1" />
+            <line x1="85%" y1="20%" x2="85%" y2="45%" stroke="#14b8a6" stroke-width="1" />
+            <line x1="85%" y1="45%" x2="65%" y2="45%" stroke="#14b8a6" stroke-width="1" />
+            <circle cx="85%" cy="20%" r="3" fill="#f59e0b" />
+            <circle cx="65%" cy="45%" r="3" fill="#14b8a6" />
+
+            <line x1="0" y1="75%" x2="20%" y2="75%" stroke="#14b8a6" stroke-width="1" />
+            <line x1="20%" y1="75%" x2="20%" y2="85%" stroke="#14b8a6" stroke-width="1" />
+            <line x1="20%" y1="85%" x2="50%" y2="85%" stroke="#14b8a6" stroke-width="1" />
+            <circle cx="20%" cy="75%" r="3" fill="#14b8a6" />
+            <circle cx="50%" cy="85%" r="3" fill="#f59e0b" />
+
+            <line x1="100%" y1="70%" x2="80%" y2="70%" stroke="#14b8a6" stroke-width="1" />
+            <line x1="80%" y1="70%" x2="80%" y2="90%" stroke="#14b8a6" stroke-width="1" />
+            <circle cx="80%" cy="70%" r="3" fill="#f59e0b" />
+        </svg>
+
+        <!-- Canvas para Matrix Rain -->
+        <canvas id="matrix-canvas"></canvas>
+
+        <!-- Glow Orbs -->
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+
+        <!-- Scanline overlay -->
+        <div class="scanline"></div>
+
+        <!-- Floating Tags Container -->
+        <div id="floating-tags-container"></div>
+
+        <!-- Crypto Hash Display -->
+        <div id="crypto-hash-display"></div>
+    </div>
+
+    <header>
+        <div class="logo-area" style="gap: 1.25rem;">
+            <img src="/uniateneulogo/logoateneu.png" alt="UniAteneu Logo" style="height: 55px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); background-color: rgba(255,255,255,0.05); padding: 4px;">
+            <div class="logo-text">
+                <h1>Arsenal Criptográfico</h1>
+                <p>UniAteneu Lagoa • Segurança de Sistemas</p>
+            </div>
+        </div>
+        
+        <div class="header-badge" style="background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.25); color: #fef08a;">
+            <span class="dot dot-yellow" style="animation: pulse 1.5s infinite"></span>
+            Arquitetura Limpa Protegida
+        </div>
+    </header>
+
+    <!-- Banner da Equipe -->
+    <div class="team-banner">
+        <div class="team-details">
+            <h3>Criptografia Aplicada ao Desenvolvimento</h3>
+            <p>
+                Este painel visual interativo foi desenvolvido para demonstrar na prática os fundamentos criptográficos, a aplicação em arquiteturas robustas e seguras e os mecanismos de criptografia reversível, alinhando a teoria acadêmica ao ecossistema moderno de DevSecOps.
+            </p>
+        </div>
+        <div class="team-members-list">
+            <div class="team-label">EQUIPE DE DESENVOLVIMENTO</div>
+            <div class="team-names">Samuel Caetano</div>
+            <div class="team-names">Samuel Mendes</div>
+            <div class="team-names">Everson</div>
+        </div>
+    </div>
+
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="switchTab('hash-tab', this)">
+            <i data-lucide="hash"></i> 1. Hash & Salting
+        </button>
+        <button class="tab-btn" onclick="switchTab('sim-tab', this)">
+            <i data-lucide="key"></i> 2. Cifra Simétrica
+        </button>
+        <button class="tab-btn" onclick="switchTab('asym-tab', this)">
+            <i data-lucide="arrow-left-right"></i> 3. Cifra Assimétrica (RSA)
+        </button>
+    </div>
+
+    <main>
+        
+        <!-- ==================================================== -->
+        <!-- TAB 1: HASH E AUTENTICAÇÃO                           -->
+        <!-- ==================================================== -->
+        <div id="hash-tab" class="tab-content active">
+            <div class="card">
+                <div class="card-header">
+                    <i data-lucide="user-plus"></i>
+                    <h2>Laboratório 1: Cadastro e Comparação de Hash</h2>
+                </div>
+                
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.4;">
+                    Esta seção demonstra o processo real de armazenamento de senhas. O hash é uma via de mão única que destrói o formato original do dado, ideal para validação de integridade e armazenamento de senhas.
+                </p>
+
+                <!-- Cadastro -->
+                <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="font-size: 1rem; font-weight: 700; color: var(--accent);">Etapa 1: Cadastrar Nova Conta</h3>
+                        <div class="tooltip-wrapper" data-tooltip="Hashing é um algoritmo matemático que mapeia dados de tamanho variável para um comprimento fixo de forma irreversível.">
+                            <span class="tooltip-icon"><i data-lucide="help-circle" style="width: 16px;"></i> O que é Hash?</span>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Usuário</label>
+                            <input type="text" id="reg-username" placeholder="ex: samuel">
+                        </div>
+                        <div class="form-group">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <label>Senha Secreta</label>
+                                <div class="tooltip-wrapper" data-tooltip="A senha digitada será concatenada ao Sal (Salt) antes do processamento, evitando que um invasor descubra senhas iguais de usuários diferentes.">
+                                    <span class="tooltip-icon" style="color: var(--secondary);"><i data-lucide="help-circle" style="width: 14px;"></i> Segurança</span>
+                                </div>
+                            </div>
+                            <input type="password" id="reg-password" placeholder="ex: 123456">
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="executeRegister()">
+                        <i data-lucide="save"></i> Registrar Usuário
+                    </button>
+                </div>
+
+                <!-- Login -->
+                <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="font-size: 1rem; font-weight: 700; color: var(--secondary);">Etapa 2: Acessar Conta (Login)</h3>
+                        <div class="tooltip-wrapper" data-tooltip="No login, o sistema busca o Sal do usuário no banco, junta com a senha digitada e recalcula o hash. Se for idêntico ao salvo, concede acesso.">
+                            <span class="tooltip-icon"><i data-lucide="help-circle" style="width: 16px;"></i> Como é validado?</span>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label>Usuário</label>
+                            <input type="text" id="login-username" placeholder="Digite seu usuário">
+                        </div>
+                        <div class="form-group">
+                            <label>Senha Secreta</label>
+                            <input type="password" id="login-password" placeholder="Digite sua senha">
+                        </div>
+                    </div>
+                    <button class="btn-success" onclick="executeLogin()">
+                        <i data-lucide="log-in"></i> Entrar na Conta
+                    </button>
+                </div>
+
+                <!-- Auth Status Panel -->
+                <div id="auth-status" class="auth-status-panel"></div>
+
+                <!-- DB Visualizer -->
+                <div class="db-visualizer">
+                    <div class="db-header">
+                        <div class="db-title">
+                            <div class="tooltip-wrapper" data-tooltip="O banco de dados armazena apenas o sal e o hash de 128-bits. Mesmo se o banco vazar, a senha original não é revelada diretamente!">
+                                <i data-lucide="database" style="width: 14px; margin-right: 4px; color: var(--success);"></i>
+                                Visualizador do Banco de Dados Físico
+                            </div>
+                        </div>
+                        <button onclick="loadUsersTable()" class="term-btn" style="padding: 2px 6px;"><i data-lucide="refresh-cw" style="width: 10px;"></i> Atualizar</button>
+                    </div>
+                    <div class="db-table-wrapper">
+                        <table id="db-table">
+                            <thead>
+                                <tr>
+                                    <th>Usuário</th>
+                                    <th>Sal (Salt)</th>
+                                    <th>Hash Armazenado (128-bit)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="3" style="text-align: center; color: var(--text-secondary);">Cadastre uma conta para povoar o banco.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal Logs Hash -->
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <span class="dot dot-red"></span>
+                        <span class="dot dot-yellow"></span>
+                        <span class="dot dot-green"></span>
+                    </div>
+                    <div class="terminal-title">
+                        <i data-lucide="terminal" style="width: 14px;"></i> CONSOLE: PROCESSAMENTO DE HASH EM TEMPO REAL
+                    </div>
+                    <div class="terminal-actions">
+                        <button class="term-btn" onclick="clearTerminal('hash-term')"><i data-lucide="trash-2" style="width: 12px;"></i> Limpar</button>
+                    </div>
+                </div>
+                <div class="terminal-body" id="hash-term">
+                    <div class="terminal-welcome">
+                        [SISTEMA ATIVO] Aguardando registro de conta ou tentativa de login...<br>
+                        Aqui você poderá ver as rodadas de deslocamento aritmético bitwise do hashing.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- TAB 2: CIFRAGE SIMÉTRICA (FEISTEL)                   -->
+        <!-- ==================================================== -->
+        <div id="sim-tab" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <i data-lucide="key-round"></i>
+                    <h2>Laboratório 2: Cifra Feistel Simétrica (16-bit Blocks)</h2>
+                </div>
+
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.4;">
+                    Criptografia Simétrica: Usa a **mesma chave** para trancar (cifrar) e destrancar (decifrar). Focado em alta confidencialidade e velocidade bruta de processamento em lote.
+                </p>
+
+                <div class="form-group">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <label>Chave Simétrica Mestra (Compartilhada)</label>
+                        <div class="tooltip-wrapper" data-tooltip="Chave única secreta que deve ser compartilhada entre as partes. É usada tanto no início da cifragem quanto no final da decifragem.">
+                            <span class="tooltip-icon"><i data-lucide="help-circle" style="width: 16px;"></i> Papel da Chave</span>
+                        </div>
+                    </div>
+                    <input type="text" id="sim-key" placeholder="Ex: SENHA_SECRETA_123" value="AULA_PRATICA">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 0.5rem;">
+                    <!-- Coluna de Cifragem -->
+                    <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="font-size: 1rem; font-weight: 700; color: var(--accent);">Cifrar Mensagem</h3>
+                            <div class="tooltip-wrapper" data-tooltip="Rede de Feistel: Divide o bloco de dados de 2 bytes ao meio (Esquerda/Direita). A cada rodada, a metade direita é misturada com uma chave e operada com XOR contra a metade esquerda.">
+                                <span class="tooltip-icon" style="color: var(--accent);"><i data-lucide="help-circle" style="width: 16px;"></i> Rede de Feistel?</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Texto Puro (Plaintext)</label>
+                            <textarea id="sim-plaintext" placeholder="Escreva a mensagem a ser cifrada...">ESTUDE CRIPTOGRAFIA</textarea>
+                        </div>
+                        <button class="btn-primary" onclick="executeSymmetricEncrypt()">
+                            <i data-lucide="lock"></i> Cifrar (Encriptar)
+                        </button>
+                    </div>
+
+                    <!-- Coluna de Decifragem -->
+                    <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="font-size: 1rem; font-weight: 700; color: var(--success);">Decifrar Mensagem</h3>
+                            <div class="tooltip-wrapper" data-tooltip="Como a rede Feistel é simétrica, decifrar exige apenas reexecutar a cifragem aplicando as chaves de rodada de forma invertida (K3 -> K2 -> K1 -> K0).">
+                                <span class="tooltip-icon" style="color: var(--success);"><i data-lucide="help-circle" style="width: 16px;"></i> Por que Reversível?</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Texto Cifrado (Hexadecimal)</label>
+                            <input type="text" id="sim-ciphertext" placeholder="Cole o código hexadecimal gerado...">
+                        </div>
+                        <button class="btn-success" onclick="executeSymmetricDecrypt()">
+                            <i data-lucide="unlock"></i> Decifrar (Desencriptar)
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal Logs Symmetric -->
+            <div class="terminal-container">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <span class="dot dot-red"></span>
+                        <span class="dot dot-yellow"></span>
+                        <span class="dot dot-green"></span>
+                    </div>
+                    <div class="terminal-title">
+                        <i data-lucide="terminal" style="width: 14px;"></i> CONSOLE: ITERAÇÕES DA REDE DE FEISTEL
+                    </div>
+                    <div class="terminal-actions">
+                        <button class="term-btn" onclick="clearTerminal('sim-term')"><i data-lucide="trash-2" style="width: 12px;"></i> Limpar</button>
+                    </div>
+                </div>
+                <div class="terminal-body" id="sim-term">
+                    <div class="terminal-welcome">
+                        [SISTEMA ATIVO] Aguardando envio de texto para cifrar/decifrar...<br>
+                        Os logs detalharão o split Left/Right, substituição do S-Box e operações XOR.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================================================== -->
+        <!-- TAB 3: CIFRA ASSIMÉTRICA (RSA)                       -->
+        <!-- ==================================================== -->
+        <div id="asym-tab" class="tab-content rsa-layout">
+            <div class="card" style="gap: 1.25rem;">
+                <div class="card-header">
+                    <i data-lucide="git-branch"></i>
+                    <h2>Laboratório 3: Cifra Assimétrica RSA (Chave Pública/Privada)</h2>
+                </div>
+
+                <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.4; margin-bottom: 0.25rem;">
+                    Criptografia Assimétrica: Utiliza um **par de chaves**. A **Chave Pública** é distribuída e criptografa a mensagem. A **Chave Privada** é secreta e apenas ela decifra. Ideal para troca segura de chaves de sessão e assinaturas digitais.
+                </p>
+
+                <!-- Keygen Panel -->
+                <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem; background: rgba(0,0,0,0.1);">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--accent);">Etapa 1: Gerar Par de Chaves RSA</h3>
+                        <div class="tooltip-wrapper" data-tooltip="Primos grandes formam o módulo n. No RSA real, primos de 2048 bits impedem a fatoração computacional por computadores convencionais.">
+                            <span class="tooltip-icon"><i data-lucide="help-circle" style="width: 14px;"></i> Por que Primos?</span>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        <div class="form-group">
+                            <label>Número Primo p</label>
+                            <input type="number" id="rsa-p" value="61" style="padding: 0.5rem 0.75rem;">
+                        </div>
+                        <div class="form-group">
+                            <label>Número Primo q</label>
+                            <input type="number" id="rsa-q" value="53" style="padding: 0.5rem 0.75rem;">
+                        </div>
+                    </div>
+                    <div class="prime-suggestions">
+                        <span style="font-size: 0.75rem; color: var(--text-secondary); display: flex; align-items: center;">Sugestões de primos: </span>
+                        <span class="prime-pill" onclick="setPrimes(17, 19)">17 e 19</span>
+                        <span class="prime-pill" onclick="setPrimes(61, 53)">61 e 53</span>
+                        <span class="prime-pill" onclick="setPrimes(131, 137)">131 e 137</span>
+                    </div>
+                    <button class="btn-primary" onclick="executeAsymmetricKeygen()" style="padding: 0.6rem;">
+                        <i data-lucide="key-round"></i> Calcular Par de Chaves
+                    </button>
+                </div>
+
+                <!-- Keys Display -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                    <div style="background: rgba(59, 130, 246, 0.05); border: 1.5px solid rgba(59, 130, 246, 0.2); border-radius: 10px; padding: 0.75rem; position: relative;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h4 style="font-size: 0.8rem; font-weight: 700; color: #60a5fa; text-transform: uppercase;">Chave Pública (e, n)</h4>
+                            <div class="tooltip-wrapper" data-tooltip="A chave pública (composta pelo expoente público 'e' e pelo módulo 'n') pode ser exposta ao mundo para que qualquer um possa criptografar dados para você.">
+                                <span class="tooltip-icon" style="color: #60a5fa;"><i data-lucide="help-circle" style="width: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <div id="pub-key-display" class="font-mono" style="font-size: 0.9rem; margin-top: 0.25rem; font-weight: 700; color: white;">Aguardando geração...</div>
+                    </div>
+                    <div style="background: rgba(139, 92, 246, 0.05); border: 1.5px solid rgba(139, 92, 246, 0.2); border-radius: 10px; padding: 0.75rem; position: relative;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h4 style="font-size: 0.8rem; font-weight: 700; color: #a78bfa; text-transform: uppercase;">Chave Privada (d, n)</h4>
+                            <div class="tooltip-wrapper" data-tooltip="A chave privada (expoente privado 'd' e módulo 'n') deve ser protegida sob sigilo absoluto. Só ela desfaz os cálculos gerados pela pública.">
+                                <span class="tooltip-icon" style="color: #a78bfa;"><i data-lucide="help-circle" style="width: 12px;"></i></span>
+                            </div>
+                        </div>
+                        <div id="priv-key-display" class="font-mono" style="font-size: 0.9rem; margin-top: 0.25rem; font-weight: 700; color: white;">Aguardando geração...</div>
+                    </div>
+                </div>
+
+                <!-- Encrypt / Decrypt Forms -->
+                <div style="display: grid; grid-template-columns: 1fr; gap: 1rem;">
+                    <!-- Asym Encrypt -->
+                    <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--accent);">Cifragem com Chave Pública</h3>
+                            <div class="tooltip-wrapper" data-tooltip="Fórmula: C = M^e mod n. Cada letra é convertida para ASCII e elevada ao expoente público 'e', aplicando o resto da divisão pelo módulo 'n'.">
+                                <span class="tooltip-icon" style="color: var(--accent);"><i data-lucide="help-circle" style="width: 14px;"></i> Equação</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Texto a Cifrar</label>
+                            <input type="text" id="asym-plaintext" placeholder="Mensagem a cifrar..." value="SEGURANCA">
+                        </div>
+                        <button class="btn-primary" onclick="executeAsymmetricEncrypt()" style="padding: 0.6rem;">
+                            <i data-lucide="lock"></i> Cifrar com Chave Pública
+                        </button>
+                    </div>
+
+                    <!-- Asym Decrypt -->
+                    <div style="border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 1rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="font-size: 0.95rem; font-weight: 700; color: var(--success);">Decifragem com Chave Privada</h3>
+                            <div class="tooltip-wrapper" data-tooltip="Fórmula: M = C^d mod n. O texto cifrado 'C' é elevado ao expoente secreto 'd' sob o módulo 'n'. A matemática de Euler garante a restauração original.">
+                                <span class="tooltip-icon" style="color: var(--success);"><i data-lucide="help-circle" style="width: 14px;"></i> Equação</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Vetor Cifrado (Ex: [123, 456, 789])</label>
+                            <input type="text" id="asym-ciphertext" placeholder="Cole o vetor de inteiros cifrados aqui...">
+                        </div>
+                        <button class="btn-success" onclick="executeAsymmetricDecrypt()" style="padding: 0.6rem;">
+                            <i data-lucide="unlock"></i> Decifrar com Chave Privada
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal Logs Asymmetric -->
+            <div class="terminal-container" style="min-height: 480px;">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <span class="dot dot-red"></span>
+                        <span class="dot dot-yellow"></span>
+                        <span class="dot dot-green"></span>
+                    </div>
+                    <div class="terminal-title">
+                        <i data-lucide="terminal" style="width: 14px;"></i> CONSOLE: EQUAÇÕES MATEMÁTICAS DO RSA
+                    </div>
+                    <div class="terminal-actions">
+                        <button class="term-btn" onclick="clearTerminal('asym-term')"><i data-lucide="trash-2" style="width: 12px;"></i> Limpar</button>
+                    </div>
+                </div>
+                <div class="terminal-body" id="asym-term" style="max-height: 580px;">
+                    <div class="terminal-welcome">
+                        [SISTEMA ATIVO] Insira números primos p e q e gere as chaves para iniciar.<br>
+                        O console exibirá o cálculo do Totiente de Euler phi(n), determinação de chaves e a exponenciação modular caractere a caractere.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Banners Educacionais Baseados nos Slides -->
+    <div style="width: 90%; max-width: 1400px; margin: 0 auto 2.5rem;">
+        <div class="edu-grid">
+            <div class="edu-card">
+                <h3><i data-lucide="alert-triangle"></i> Princípio 1: Don't Roll Your Own Crypto</h3>
+                <p>
+                    A criptografia baseia-se em matemática avançada rigorosamente testada por décadas pela comunidade científica global. Soluções caseiras ou fórmulas de embaralhamento artesanais de strings sempre possuem falhas ocultas. Em projetos reais, siga o Padrão Ouro:
+                </p>
+                <ul class="gold-list">
+                    <li>• Cifragem de Dados: AES-256 (Padrão de Mercado)</li>
+                    <li>• Troca de Chaves / Assinaturas: RSA / ECC</li>
+                    <li>• Armazenamento de Senhas: Argon2id / BCrypt</li>
+                </ul>
+            </div>
+            
+            <div class="edu-card">
+                <h3><i data-lucide="check-square"></i> Princípio 3: Criptografia Autenticada</h3>
+                <p>
+                    A segurança de dados em trânsito exige mais do que apenas esconder o conteúdo (Confidencialidade). É fundamental comprovar que os dados não foram interceptados e adulterados durante o percurso (Integridade).
+                </p>
+                <p style="margin-top: 0.25rem;">
+                    O padrão recomendado é a criptografia autenticada usando <strong>AES-GCM (Galois/Counter Mode)</strong>, que funciona como um selo digital protetor inviolável rejeitando dados manipulados na entrega.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Desenvolvido para demonstração conceitual da disciplina de Segurança de Sistemas e Fundamentos de DevSecOps.</p>
+        <p class="signature">Equipe: Samuel Caetano | Samuel Mendes | Everson</p>
+        <p style="font-size: 0.75rem; margin-top: 0.25rem; opacity: 0.6;">Status: Documentação de Arquitetura Segura • Software Factory Labs</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUsersTable();
+        });
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('active');
+            });
+            
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+
+        function clearTerminal(terminalId) {
+            const body = document.getElementById(terminalId);
+            body.innerHTML = `<div class="terminal-line" style="color: #60a5fa">[TERMINAL REINICIADO] Console limpo com sucesso.</div>`;
+        }
+
+        function printToTerminal(terminalId, lines) {
+            const body = document.getElementById(terminalId);
+            body.innerHTML = '';
+            
+            lines.forEach((line, index) => {
+                setTimeout(() => {
+                    const lineEl = document.createElement('div');
+                    lineEl.className = 'terminal-line';
+                    
+                    if (line.includes('[SUCESSO]') || line.includes('SUCESSO')) {
+                        lineEl.style.color = '#10b981';
+                        lineEl.style.fontWeight = 'bold';
+                    } else if (line.includes('[FALHA]') || line.includes('Erro:')) {
+                        lineEl.style.color = '#f87171';
+                        lineEl.style.fontWeight = 'bold';
+                    } else if (line.includes('1.') || line.includes('2.') || line.includes('3.') || line.includes('4.') || line.includes('5.')) {
+                        lineEl.style.color = '#8b5cf6';
+                        lineEl.style.fontWeight = 'bold';
+                    } else if (line.startsWith('   CHAVE')) {
+                        lineEl.style.color = '#fbbf24';
+                        lineEl.style.fontWeight = '700';
+                    }
+                    
+                    lineEl.innerText = line;
+                    body.appendChild(lineEl);
+                    body.scrollTop = body.scrollHeight;
+                }, index * 80);
+            });
+        }
+
+        function setPrimes(p, q) {
+            document.getElementById('rsa-p').value = p;
+            document.getElementById('rsa-q').value = q;
+            
+            const term = document.getElementById('asym-term');
+            term.innerHTML = `<div class="terminal-line" style="color: #06b6d4">Primos sugeridos configurados: p = ${p}, q = ${q}. Clique em 'Calcular Par de Chaves'.</div>`;
+        }
+
+        function loadUsersTable() {
+            fetch('/api/hash/users')
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = document.querySelector('#db-table tbody');
+                    tbody.innerHTML = '';
+                    
+                    if (!data.users || data.users.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="3" style="text-align: center; color: var(--text-secondary);">Cadastre uma conta para povoar o banco.</td></tr>`;
+                        return;
+                    }
+                    
+                    data.users.forEach(user => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="font-mono" style="font-weight:700; color:white;">${user.username}</td>
+                            <td class="font-mono text-salt">'${user.salt}'</td>
+                            <td class="font-mono text-hash">${user.hash}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                })
+                .catch(err => console.error("Erro ao ler tabela de usuários:", err));
+        }
+
+        function executeRegister() {
+            const username = document.getElementById('reg-username').value.trim();
+            const password = document.getElementById('reg-password').value;
+            
+            if(!username || !password) {
+                alert("Por favor, preencha todos os campos para registro!");
+                return;
+            }
+            
+            fetch('/api/hash/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const statusDiv = document.getElementById('auth-status');
+                statusDiv.className = 'auth-status-panel ' + (data.success ? 'success' : 'error');
+                statusDiv.innerHTML = `<i data-lucide="${data.success ? 'check-circle' : 'alert-circle'}"></i> <span>${data.message}</span>`;
+                statusDiv.style.display = 'flex';
+                lucide.createIcons();
+                
+                if (data.success) {
+                    loadUsersTable();
+                    document.getElementById('reg-username').value = '';
+                    document.getElementById('reg-password').value = '';
+                }
+                
+                if(data.logs && data.logs.length > 0) {
+                    printToTerminal('hash-term', data.logs);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Erro ao efetuar requisição.");
+            });
+        }
+
+        function executeLogin() {
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value;
+            
+            if(!username || !password) {
+                alert("Por favor, preencha todos os campos para login!");
+                return;
+            }
+            
+            fetch('/api/hash/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            })
+            .then(res => res.json())
+            .then(data => {
+                const statusDiv = document.getElementById('auth-status');
+                statusDiv.className = 'auth-status-panel ' + (data.success ? 'success' : 'error');
+                statusDiv.innerHTML = `<i data-lucide="${data.success ? 'shield-check' : 'shield-x'}"></i> <span>${data.message}</span>`;
+                statusDiv.style.display = 'flex';
+                lucide.createIcons();
+                
+                if(data.logs && data.logs.length > 0) {
+                    printToTerminal('hash-term', data.logs);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Erro ao efetuar login.");
+            });
+        }
+
+        function executeSymmetricEncrypt() {
+            const message = document.getElementById('sim-plaintext').value;
+            const key = document.getElementById('sim-key').value;
+            
+            if(!message) {
+                alert("Escreva uma mensagem para cifrar!");
+                return;
+            }
+            
+            fetch('/api/symmetric/encrypt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message, key })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('sim-ciphertext').value = data.ciphertext;
+                    if(data.logs && data.logs.length > 0) {
+                        printToTerminal('sim-term', data.logs);
+                    }
+                } else {
+                    alert("Erro: " + data.message);
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
+        function executeSymmetricDecrypt() {
+            const ciphertext = document.getElementById('sim-ciphertext').value.trim();
+            const key = document.getElementById('sim-key').value;
+            
+            if(!ciphertext) {
+                alert("Cole o código hexadecimal cifrado para decifrar!");
+                return;
+            }
+            
+            fetch('/api/symmetric/decrypt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ciphertext, key })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById('sim-plaintext').value = data.plaintext;
+                    if(data.logs && data.logs.length > 0) {
+                        printToTerminal('sim-term', data.logs);
+                    }
+                } else {
+                    alert("Falha na decifragem: " + data.message);
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
+        let currentKeys = null;
+
+        function executeAsymmetricKeygen() {
+            const p = document.getElementById('rsa-p').value;
+            const q = document.getElementById('rsa-q').value;
+            
+            fetch('/api/asymmetric/keygen', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ p, q })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    currentKeys = data.keys;
+                    document.getElementById('pub-key-display').innerText = `e = ${data.keys.e}, n = ${data.keys.n}`;
+                    document.getElementById('priv-key-display').innerText = `d = ${data.keys.d}, n = ${data.keys.n}`;
+                    
+                    if(data.logs && data.logs.length > 0) {
+                        printToTerminal('asym-term', data.logs);
+                    }
+                } else {
+                    document.getElementById('pub-key-display').innerText = 'Erro na geração';
+                    document.getElementById('priv-key-display').innerText = 'Erro na geração';
+                    if(data.logs && data.logs.length > 0) {
+                        printToTerminal('asym-term', data.logs);
+                    }
+                    alert(data.message);
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
+        function executeAsymmetricEncrypt() {
+            const message = document.getElementById('asym-plaintext').value;
+            
+            if(!currentKeys) {
+                alert("Por favor, gere as chaves RSA primeiro!");
+                return;
+            }
+            if(!message) {
+                alert("Insira a mensagem a ser cifrada!");
+                return;
+            }
+            
+            fetch('/api/asymmetric/encrypt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    message, 
+                    e: currentKeys.e, 
+                    n: currentKeys.n 
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    document.getElementById('asym-ciphertext').value = JSON.stringify(data.ciphertext);
+                    if(data.logs && data.logs.length > 0) {
+                        printToTerminal('asym-term', data.logs);
+                    }
+                } else {
+                    alert("Erro: " + data.message);
+                }
+            })
+            .catch(err => console.error(err));
+        }
+
+        // ==========================================
+        // PLANO DE FUNDO HACKER ANIMADO E OTIMIZADO
+        // ==========================================
+        (function() {
+            const canvas = document.getElementById('matrix-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            const CRYPTO_CHARS = "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEF∑∏∫∂∇⊕⊗⊂⊃∈∉≡≈≠∧∨¬⊻";
+            const fontSize = 14;
+            let columns = 0;
+            let drops = [];
+            
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                columns = Math.floor(canvas.width / fontSize);
+                drops = Array(columns).fill(1).map(() => Math.floor(Math.random() * -100));
+            }
+            
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            let lastTime = 0;
+            const fps = 24;
+            const interval = 1000 / fps;
+            
+            function drawMatrix(timestamp) {
+                requestAnimationFrame(drawMatrix);
+                
+                const delta = timestamp - lastTime;
+                if (delta < interval) return;
+                lastTime = timestamp - (delta % interval);
+                
+                ctx.fillStyle = "rgba(5, 16, 20, 0.08)";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.font = `${fontSize}px monospace`;
+                
+                for (let i = 0; i < drops.length; i++) {
+                    if (drops[i] < 0) {
+                        drops[i]++;
+                        continue;
+                    }
+                    
+                    const char = CRYPTO_CHARS[Math.floor(Math.random() * CRYPTO_CHARS.length)];
+                    const x = i * fontSize;
+                    const y = drops[i] * fontSize;
+                    
+                    const randomVal = Math.random();
+                    if (drops[i] === 0 || randomVal > 0.98) {
+                        ctx.fillStyle = "#ffffff";
+                        ctx.shadowColor = "#14b8a6";
+                        ctx.shadowBlur = 8;
+                    } else if (randomVal > 0.85) {
+                        ctx.fillStyle = "#f59e0b";
+                        ctx.shadowBlur = 0;
+                    } else if (randomVal > 0.45) {
+                        ctx.fillStyle = "#14b8a6";
+                        ctx.shadowBlur = 0;
+                    } else {
+                        ctx.fillStyle = "#0c4f48";
+                        ctx.shadowBlur = 0;
+                    }
+                    
+                    ctx.fillText(char, x, y);
+                    
+                    if (y > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+                    drops[i]++;
+                }
+            }
+            
+            requestAnimationFrame(drawMatrix);
+            
+            const HEX_STRINGS = [
+                "SHA-256: a3f8b2c1d4e9...",
+                "AES-256-GCM",
+                "RSA-4096",
+                "0x7f3a9b2c4d1e",
+                "ECDSA secp256k1",
+                "PBKDF2-HMAC-SHA512",
+                "0xdeadbeef",
+                "TLS 1.3 handshake",
+                "ChaCha20-Poly1305",
+                "ED25519 keypair",
+                "keccak256(data)",
+                "secp384r1 curve",
+                "blake2b-512",
+                "argon2id hash",
+                "x25519 DH",
+                "UniAteneu Lagoa",
+                "Samuel Mendes",
+                "Samuel Caetano",
+                "Everson",
+                "Clean Architecture",
+                "DevSecOps"
+            ];
+            
+            const tagsContainer = document.getElementById('floating-tags-container');
+            const colors = ["#14b8a6", "#0d9488", "#2dd4bf", "#f59e0b", "#eab308"];
+            
+            const activeTags = [];
+            
+            function createFloatingTag(id) {
+                const tagEl = document.createElement('div');
+                tagEl.className = 'floating-tag';
+                const text = HEX_STRINGS[id % HEX_STRINGS.length];
+                tagEl.innerText = text;
+                
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const x = Math.random() * 90;
+                let y = 100 + Math.random() * 10;
+                const speed = 0.04 + Math.random() * 0.06;
+                const baseOpacity = 0.2 + Math.random() * 0.45;
+                
+                tagEl.style.left = `${x}%`;
+                tagEl.style.color = color;
+                tagEl.style.textShadow = `0 0 6px ${color}`;
+                tagsContainer.appendChild(tagEl);
+                
+                activeTags.push({
+                    el: tagEl,
+                    x,
+                    y,
+                    speed,
+                    baseOpacity,
+                    id,
+                    tickOffset: Math.random() * 100
+                });
+            }
+            
+            for (let i = 0; i < 14; i++) {
+                createFloatingTag(i);
+                activeTags[i].y = Math.random() * 90;
+            }
+            
+            let tagTick = 0;
+            function updateFloatingTags() {
+                tagTick++;
+                for (let i = 0; i < activeTags.length; i++) {
+                    const tag = activeTags[i];
+                    tag.y -= tag.speed;
+                    
+                    if (tag.y < -5) {
+                        tag.y = 105;
+                        tag.x = Math.random() * 90;
+                        tag.el.style.left = `${tag.x}%`;
+                        if (Math.random() > 0.4) {
+                            tag.el.innerText = HEX_STRINGS[Math.floor(Math.random() * HEX_STRINGS.length)];
+                        }
+                    }
+                    
+                    tag.el.style.top = `${tag.y}%`;
+                    const opacityOscillation = Math.sin(tagTick * 0.015 + tag.tickOffset) * 0.15;
+                    tag.el.style.opacity = Math.max(0.1, tag.baseOpacity + opacityOscillation);
+                }
+                
+                setTimeout(updateFloatingTags, 50);
+            }
+            
+            updateFloatingTags();
+            
+            const hashDisplay = document.getElementById('crypto-hash-display');
+            const hashLines = [];
+            
+            function generateRandomHash() {
+                return Array.from({ length: 48 }, () => "0123456789abcdef"[Math.floor(Math.random() * 16)]).join("");
+            }
+            
+            for (let i = 0; i < 5; i++) {
+                const lineEl = document.createElement('div');
+                lineEl.className = 'crypto-hash-line';
+                lineEl.innerText = generateRandomHash();
+                hashDisplay.appendChild(lineEl);
+                hashLines.push(lineEl);
+            }
+            
+            function updateCryptoHashes() {
+                const randomIdx = Math.floor(Math.random() * hashLines.length);
+                hashLines[randomIdx].innerText = generateRandomHash();
+                setTimeout(updateCryptoHashes, 1200);
+            }
+            
+            updateCryptoHashes();
+        })();
+        
+        function executeAsymmetricDecrypt() {
+            const ciphertext = document.getElementById('asym-ciphertext').value.trim();
+            
+            if(!currentKeys) {
+                alert("Por favor, gere as chaves RSA primeiro!");
+                return;
+            }
+            if(!ciphertext) {
+                alert("Cole o vetor cifrado (lista de números)!");
+                return;
+            }
+            
+            fetch('/api/asymmetric/decrypt', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    ciphertext, 
+                    d: currentKeys.d, 
+                    n: currentKeys.n 
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    document.getElementById('asym-plaintext').value = data.plaintext;
+                    if(data.logs && data.logs.length > 0) {
+                        printToTerminal('asym-term', data.logs);
+                    }
+                } else {
+                    alert("Erro na decifragem: " + data.message);
+                }
+            })
+            .catch(err => console.error(err));
+        }
+    </script>
+</body>
+</html>
